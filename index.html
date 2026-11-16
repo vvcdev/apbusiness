@@ -1,0 +1,745 @@
+<!-- Cookie Business Entry Event -- Interactive Asynchronous PBL Activity -->
+<div id="cbee-root"></div>
+
+<style>
+  #cbee-root {
+    --navy-950: #0a1830;
+    --navy-900: #0e2143;
+    --navy-800: #142c54;
+    --navy-700: #1c3a68;
+    --navy-line: #2a4a80;
+    --gold: #c9a227;
+    --gold-bright: #e0bc4d;
+    --cream: #f4efe1;
+    --slate: #9fb0c9;
+    --slate-dim: #6d80a0;
+    --glow-green: #5a9e78;
+    --grow-rose: #a15a5a;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    font-family: var(--font-body);
+    color: var(--cream);
+    background: var(--navy-950);
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 0;
+    line-height: 1.55;
+  }
+  #cbee-root * { box-sizing: border-box; }
+  #cbee-root h1, #cbee-root h2, #cbee-root h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin: 0 0 0.5em 0;
+    letter-spacing: 0.01em;
+  }
+  #cbee-root p { margin: 0 0 1em 0; color: var(--slate); }
+  #cbee-root label { display:block; font-family: var(--font-body); font-weight:600; color: var(--gold-bright); font-size:0.82rem; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:0.4em; }
+  #cbee-root textarea, #cbee-root input[type="text"] {
+    width:100%; background: var(--navy-950); border:1px solid var(--navy-line); border-radius:6px;
+    color: var(--cream); font-family: var(--font-body); font-size:0.98rem; padding:0.75em 0.9em; resize:vertical;
+  }
+  #cbee-root textarea:focus, #cbee-root input[type="text"]:focus { outline:2px solid var(--gold); outline-offset:1px; border-color: var(--gold); }
+  #cbee-root .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+  #cbee-root .badge-row { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  #cbee-root .badge {
+    width:46px; height:46px; border-radius:50%; background: var(--navy-800); border:1px solid var(--navy-line);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  #cbee-root .eyebrow { font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color: var(--gold); font-weight:600; margin:0; }
+  #cbee-root .timeest { font-size:0.78rem; color: var(--slate-dim); margin-top:2px; }
+  #cbee-root .card {
+    background: var(--navy-900); border:1px solid var(--navy-line); border-radius:14px; padding:28px 26px; margin-top:18px;
+  }
+  #cbee-root .instructions {
+    background: var(--navy-800); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 14px 0 20px; font-size: 0.94rem; color: var(--cream);
+  }
+  #cbee-root .instructions p:last-child { margin-bottom:0; }
+  #cbee-root .field { margin-bottom: 20px; }
+  #cbee-root .hint { font-size:0.85rem; color: var(--slate-dim); margin-top:6px; font-style:italic; }
+  #cbee-root .btnrow { display:flex; justify-content:space-between; align-items:center; margin-top:28px; gap:10px; flex-wrap:wrap; }
+  #cbee-root button {
+    font-family: var(--font-body); font-weight:600; font-size:0.92rem; letter-spacing:0.02em;
+    border-radius:7px; padding:11px 22px; cursor:pointer; border:1px solid transparent; transition: all .15s ease;
+  }
+  #cbee-root .btn-primary { background: var(--gold); color: var(--navy-950); border-color: var(--gold); }
+  #cbee-root .btn-primary:hover { background: var(--gold-bright); }
+  #cbee-root .btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
+  #cbee-root .btn-ghost { background: transparent; color: var(--slate); border-color: var(--navy-line); }
+  #cbee-root .btn-ghost:hover { color: var(--cream); border-color: var(--slate); }
+  #cbee-root .btn-small { padding:7px 14px; font-size:0.82rem; }
+  #cbee-root .progress-track { display:flex; gap:5px; margin: 22px auto 0; max-width:760px; padding:0 20px; }
+  #cbee-root .progress-seg { flex:1; height:4px; border-radius:3px; background: var(--navy-700); }
+  #cbee-root .progress-seg.done { background: var(--gold); }
+  #cbee-root .progress-seg.current { background: var(--slate); }
+  #cbee-root .stepname { text-align:center; font-size:0.78rem; color: var(--slate-dim); margin-top:8px; letter-spacing:0.06em; text-transform:uppercase; }
+  #cbee-root .save-note { display:flex; align-items:center; gap:6px; font-size:0.78rem; color: var(--slate-dim); }
+  #cbee-root .save-dot { width:6px; height:6px; border-radius:50%; background: var(--glow-green); flex-shrink:0; }
+  #cbee-root .two-col { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  @media (max-width:560px) { #cbee-root .two-col { grid-template-columns: 1fr; } }
+  #cbee-root .idea-card { background: var(--navy-800); border:1px solid var(--navy-line); border-radius:10px; padding:18px 20px; margin-bottom:16px; }
+  #cbee-root .idea-title { font-family: var(--font-display); font-size:1.15rem; color: var(--gold-bright); margin-bottom:4px; }
+  #cbee-root .idea-body { font-size:0.93rem; color: var(--cream); opacity:0.9; margin-bottom:14px; }
+  #cbee-root .glow-grow { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:560px) { #cbee-root .glow-grow { grid-template-columns:1fr; } }
+  #cbee-root .gg-label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; margin-bottom:5px; }
+  #cbee-root .gg-label.glow { color: var(--glow-green); }
+  #cbee-root .gg-label.grow { color: var(--grow-rose); }
+  #cbee-root .vocab-card {
+    background: var(--navy-800); border:1px solid var(--navy-line); border-radius:10px; padding:16px 18px; margin-bottom:14px; cursor:pointer;
+  }
+  #cbee-root .vocab-q { font-weight:600; color: var(--cream); margin-bottom:8px; }
+  #cbee-root .vocab-reveal { display:none; border-top:1px solid var(--navy-line); margin-top:12px; padding-top:12px; }
+  #cbee-root .vocab-reveal.open { display:block; }
+  #cbee-root .vocab-term { color: var(--gold-bright); font-family: var(--font-display); font-size:1.1rem; margin-bottom:4px; }
+  #cbee-root .vocab-toggle { font-size:0.78rem; color: var(--gold); text-transform:uppercase; letter-spacing:0.05em; }
+  #cbee-root .mcq-opt { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border:1px solid var(--navy-line); border-radius:8px; margin-bottom:8px; cursor:pointer; }
+  #cbee-root .mcq-opt:hover { border-color: var(--slate); }
+  #cbee-root .mcq-opt.selected { border-color: var(--gold); background: rgba(201,162,39,0.08); }
+  #cbee-root .mcq-opt input { margin-top:3px; }
+  #cbee-root canvas { background:#fdfaf2; border-radius:8px; border:1px solid var(--navy-line); touch-action:none; width:100%; max-width:520px; display:block; }
+  #cbee-root .swatches { display:flex; gap:8px; margin:12px 0; align-items:center; flex-wrap:wrap; }
+  #cbee-root .swatch { width:26px; height:26px; border-radius:50%; cursor:pointer; border:2px solid transparent; }
+  #cbee-root .swatch.active { border-color: var(--gold); }
+  #cbee-root .summary-block { margin-bottom:22px; }
+  #cbee-root .summary-label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; color: var(--gold); font-weight:700; margin-bottom:4px; }
+  #cbee-root .summary-text { color: var(--cream); font-size:0.95rem; white-space:pre-wrap; }
+  #cbee-root .summary-text.empty { color: var(--slate-dim); font-style:italic; }
+  #cbee-root .resume-banner { background: var(--navy-800); border:1px solid var(--gold); border-radius:10px; padding:16px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+  #cbee-root .homework-box { background: var(--navy-800); border:1px dashed var(--gold); border-radius:10px; padding:18px 20px; margin-top:24px; }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+(function() {
+
+  // ---------- EDITABLE CONTENT ----------
+  // Swap this scenario text for your exact "Entry Event: Cookie Business" handout
+  // language if you'd like students reading your precise wording.
+  var SCENARIO_TEXT = "Your neighbor is famous on your street for one thing: a chocolate chip cookie " +
+    "recipe passed down from their grandmother. Every time they bake a batch, neighbors show up at the " +
+    "door asking for one \u2014 and offering to pay. Lately, two national chains have opened nearby: Crumbl, " +
+    "known for rotating weekly flavors and bright pink boxes, and Insomnia Cookies, known for warm cookies " +
+    "delivered late at night. There's also a local, family-owned bakery a few blocks away that's been selling " +
+    "baked goods for twenty years. Your neighbor has a choice to make: keep baking for free, or turn the " +
+    "recipe into a real cookie business. They've asked you to help figure out what that business could look like.";
+
+  var COMP_CHECK = {
+    question: "Based on the scenario, what is the core business opportunity?",
+    options: [
+      "Opening a national cookie chain to compete directly with Crumbl",
+      "Turning a well-loved home recipe into a business that meets a need the current options don't",
+      "Convincing the neighbor to stop baking cookies entirely",
+      "Buying out the local bakery"
+    ],
+    correctIndex: 1
+  };
+
+  var GALLERY_IDEAS = [
+    {
+      title: "Batch of Six \u2014 \u201cThe Study Break Box\u201d",
+      body: "A six-cookie box sized for splitting with roommates or a study group, delivered to dorms and " +
+        "libraries between 8pm\u201312am. Menu rotates one new flavor a week, voted on by an online poll. Priced " +
+        "lower than Crumbl's full box because portions are smaller."
+    },
+    {
+      title: "Grandma's Batch \u2014 Subscription Tin",
+      body: "A monthly tin of a single \u201cheritage\u201d recipe, refreshed with one guest flavor from a customer-" +
+        "submitted family recipe each month. Marketed around nostalgia and the story behind the cookie, not " +
+        "speed or novelty."
+    },
+    {
+      title: "CookieCo Fundraiser Dough",
+      body: "Sells frozen, ready-to-bake cookie dough pucks in bulk to schools and youth sports teams as a " +
+        "fundraiser product, with the team keeping a cut of every sale. No storefront \u2014 all orders placed " +
+        "and picked up through group leaders."
+    }
+  ];
+
+  var VOCAB_CARDS = [
+    {
+      prompt: "Who is buying your cookies, and who is eating them \u2014 are those always the same person?",
+      term: "Customer vs. Consumer",
+      def: "The customer is the person who pays for the product. The consumer is the person who actually " +
+        "uses or eats it. A parent buying cookies for a school fundraiser is the customer; their kid eating " +
+        "one at lunch is the consumer. They're not always the same person \u2014 and that changes how you market."
+    },
+    {
+      prompt: "What makes your cookie business different from Crumbl, Insomnia, or a local bakery?",
+      term: "Competitive Advantage",
+      def: "The specific reason a customer would choose your business over another one that offers something " +
+        "similar. A real competitive advantage is hard for competitors to copy \u2014 \u201ccheaper\u201d rarely holds up, " +
+        "but a location, story, speed, or relationship might."
+    },
+    {
+      prompt: "Why would someone pay more for your cookie instead of a cheaper one down the street?",
+      term: "Value",
+      def: "What a customer believes they're getting relative to what they pay. Value isn't just about price " +
+        "\u2014 it includes quality, convenience, experience, and story. Businesses compete on value, not just cost."
+    }
+  ];
+
+  // ---------- STATE ----------
+  var STORAGE_PREFIX = "cookie-entry-event:";
+  var state = {
+    studentName: "",
+    partnerName: "",
+    period: "",
+    bellStop: "",
+    bellBest: "",
+    compChoice: null,
+    brainstormQ1: "",
+    brainstormQ2: "",
+    brainstormQ3: "",
+    sketchDescription: "",
+    sketchDataUrl: "",
+    galleryGlow: ["", "", ""],
+    galleryGrow: ["", "", ""],
+    reflectionQ1: "",
+    reflectionQ2: "",
+    reflectionQ3: "",
+    exitTicket: "",
+    homework: ""
+  };
+
+  var STEPS = ["start","bellringer","scenario","brainstorm","sketch","gallery","reflection","vocab","exit","summary"];
+  var STEP_LABELS = {
+    start: "Welcome", bellringer: "Bell Ringer", scenario: "The Scenario", brainstorm: "Business Brainstorm",
+    sketch: "Sketch Your Product", gallery: "Gallery Walk", reflection: "Reflection", vocab: "Word Wall",
+    exit: "Exit Ticket", summary: "Your Portfolio Entry"
+  };
+  var STEP_TIME = {
+    start: "1 min", bellringer: "4 min", scenario: "6 min", brainstorm: "12 min", sketch: "6 min",
+    gallery: "8 min", reflection: "5 min", vocab: "3 min", exit: "3 min", summary: "2 min"
+  };
+  var current = 0;
+  var saveTimer = null;
+  var storageKey = null;
+
+  function slug(s) { return (s || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""); }
+
+  function queueSave() {
+    if (!storageKey) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() {
+      window.storage.set(storageKey, JSON.stringify(state), false).catch(function(e){ console.error("save failed", e); });
+    }, 500);
+  }
+
+  function icon(name) {
+    var icons = {
+      case: '<svg width="26" height="26" viewBox="0 0 48 48" fill="none"><path d="M6 20h36l-3 20H9L6 20z" stroke="#c9a227" stroke-width="2"/><path d="M6 20l3-10h30l3 10" stroke="#c9a227" stroke-width="2"/><circle cx="16" cy="30" r="3" stroke="#c9a227" stroke-width="1.6"/><circle cx="24" cy="33" r="3" stroke="#c9a227" stroke-width="1.6"/><circle cx="32" cy="30" r="3" stroke="#c9a227" stroke-width="1.6"/></svg>',
+      bell: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M24 6a4 4 0 014 4v2c6 2 8 7 8 13v6l4 6H8l4-6v-6c0-6 2-11 8-13v-2a4 4 0 014-4z" stroke="#c9a227" stroke-width="2"/><path d="M18 37a6 6 0 0012 0" stroke="#c9a227" stroke-width="2"/></svg>',
+      scroll: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><rect x="10" y="8" width="28" height="32" rx="2" stroke="#c9a227" stroke-width="2"/><path d="M16 16h16M16 23h16M16 30h10" stroke="#c9a227" stroke-width="2"/></svg>',
+      pencil: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M8 40l3-10 21-21 7 7-21 21-10 3z" stroke="#c9a227" stroke-width="2"/><path d="M28 12l7 7" stroke="#c9a227" stroke-width="2"/></svg>',
+      brush: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M30 8c6 0 10 4 10 10-6 2-16 12-18 18l-8-8c6-2 16-12 18-18-1-1-1-2-2-2z" stroke="#c9a227" stroke-width="2"/><path d="M14 28c-3 0-6 3-6 8 5 0 8-3 8-6" stroke="#c9a227" stroke-width="2"/></svg>',
+      walk: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="10" r="4" stroke="#c9a227" stroke-width="2"/><path d="M24 14v10l-7 16M24 24l7 16M24 24l-8 6M24 24l8 6" stroke="#c9a227" stroke-width="2"/></svg>',
+      think: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><circle cx="20" cy="20" r="12" stroke="#c9a227" stroke-width="2"/><path d="M20 14v7l5 3" stroke="#c9a227" stroke-width="2"/><circle cx="36" cy="34" r="3" stroke="#c9a227" stroke-width="1.6"/><circle cx="31" cy="38" r="2" stroke="#c9a227" stroke-width="1.6"/></svg>',
+      speech: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M8 10h32v20H20l-8 8v-8H8V10z" stroke="#c9a227" stroke-width="2"/></svg>',
+      ribbon: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="10" stroke="#c9a227" stroke-width="2"/><path d="M17 25l-5 15 12-6 12 6-5-15" stroke="#c9a227" stroke-width="2"/></svg>',
+      folder: '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M6 14h12l4 5h20v19H6V14z" stroke="#c9a227" stroke-width="2"/></svg>'
+    };
+    return icons[name] || "";
+  }
+
+  function el(html) { var d = document.createElement("div"); d.innerHTML = html; return d.firstElementChild; }
+
+  function header(iconName, eyebrow, title, time) {
+    return '<div class="badge-row"><div class="badge">' + icon(iconName) + '</div><div>' +
+      '<p class="eyebrow">' + eyebrow + '</p><h2 style="margin:2px 0 0 0;">' + title + '</h2>' +
+      '<p class="timeest">About ' + time + '</p></div></div>';
+  }
+
+  function progressBar() {
+    var idx = current;
+    var track = '<div class="progress-track">';
+    for (var i = 0; i < STEPS.length; i++) {
+      var cls = i < idx ? "done" : (i === idx ? "current" : "");
+      track += '<div class="progress-seg ' + cls + '"></div>';
+    }
+    track += '</div><p class="stepname">Step ' + (idx + 1) + ' of ' + STEPS.length + ' \u00b7 ' + STEP_LABELS[STEPS[idx]] + '</p>';
+    return track;
+  }
+
+  function btnRow(opts) {
+    var backHtml = opts.showBack ? '<button class="btn-ghost" id="cbee-back">\u2190 Back</button>' : '<span></span>';
+    var saveHtml = opts.showSave ? '<div class="save-note"><span class="save-dot"></span>Saved automatically</div>' : '<span></span>';
+    return '<div class="btnrow">' + backHtml +
+      '<div style="display:flex; align-items:center; gap:16px;">' + saveHtml +
+      '<button class="btn-primary" id="cbee-next">' + (opts.nextLabel || "Continue \u2192") + '</button></div></div>';
+  }
+
+  // ---------- STEP RENDERERS ----------
+  function renderStart() {
+    return '<div class="wrap">' +
+      '<div style="text-align:center; margin-bottom:6px;">' +
+      '<svg width="120" height="120" viewBox="0 0 120 120" fill="none" style="margin:0 auto;">' +
+      '<path d="M15 50h90l-8 50H23L15 50z" stroke="#c9a227" stroke-width="2.5"/>' +
+      '<path d="M15 50l7-25h76l7 25" stroke="#c9a227" stroke-width="2.5"/>' +
+      '<circle cx="38" cy="65" r="6" stroke="#e0bc4d" stroke-width="2"/><circle cx="60" cy="72" r="6" stroke="#e0bc4d" stroke-width="2"/>' +
+      '<circle cx="82" cy="65" r="6" stroke="#e0bc4d" stroke-width="2"/><circle cx="49" cy="85" r="6" stroke="#e0bc4d" stroke-width="2"/>' +
+      '<circle cx="71" cy="85" r="6" stroke="#e0bc4d" stroke-width="2"/>' +
+      '<rect x="30" y="15" width="60" height="10" stroke="#c9a227" stroke-width="2"/>' +
+      '</svg></div>' +
+      '<p class="eyebrow" style="text-align:center;">AP Business with Personal Finance \u00b7 Project 1</p>' +
+      '<h1 style="text-align:center; font-size:2rem;">The Cookie Business Entry Event</h1>' +
+      '<p style="text-align:center; max-width:520px; margin:0 auto 22px;">Today you put on a new job title: cookie-business owner. ' +
+      'This activity walks you through everything your class would normally do together on Day 1 \u2014 at your ' +
+      'own pace, in your own words.</p>' +
+      '<div class="card">' +
+      '<div class="instructions"><p><strong>How this works:</strong> You\u2019ll move through 9 short stages. Each one tells ' +
+      'you exactly what to do \u2014 there\u2019s no separate handout to find. Your answers save automatically as you ' +
+      'type, so you can close this tab and pick up right where you left off. Total time: about 45 minutes, ' +
+      'though you can spread it across more than one sitting.</p></div>' +
+      '<div id="cbee-resume-slot"></div>' +
+      '<div class="field"><label for="cbee-name">Your name</label>' +
+      '<input type="text" id="cbee-name" placeholder="e.g. Jordan Lee" value="' + escAttr(state.studentName) + '"></div>' +
+      '<div class="two-col">' +
+      '<div class="field"><label for="cbee-period">Class period</label>' +
+      '<input type="text" id="cbee-period" placeholder="e.g. 3rd period" value="' + escAttr(state.period) + '"></div>' +
+      '<div class="field"><label for="cbee-partner">Partner (optional)</label>' +
+      '<input type="text" id="cbee-partner" placeholder="If you were assigned one" value="' + escAttr(state.partnerName) + '"></div>' +
+      '</div>' +
+      '<div class="btnrow"><span></span><button class="btn-primary" id="cbee-next" disabled>Begin \u2192</button></div>' +
+      '</div></div>';
+  }
+
+  function renderBellRinger() {
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("bell", "Bell Ringer", "Before you know the assignment\u2026", STEP_TIME.bellringer) +
+      '<div class="instructions"><p>Picture a packed cookie display case at a bakery like Crumbl or Insomnia \u2014 rows ' +
+      'of cookies stacked behind glass, no sign explaining anything, just the cookies themselves.</p>' +
+      '<p>Answer honestly and quickly. There\u2019s no wrong answer here \u2014 you\u2019re about to find out this is already ' +
+      'market research.</p></div>' +
+      '<div class="field"><label>If you walked past that window, what would make you stop and buy \u2014 or keep walking? (2\u20133 words is fine)</label>' +
+      '<input type="text" id="cbee-bellstop" placeholder="e.g. the smell, a weird flavor, the price" value="' + escAttr(state.bellStop) + '"></div>' +
+      '<div class="field"><label>Tell us about the best cookie you\u2019ve ever had. What made it the best?</label>' +
+      '<textarea id="cbee-bellbest" rows="3" placeholder="Where were you, who made it, what stood out?">' + esc(state.bellBest) + '</textarea></div>' +
+      '<div class="instructions" style="border-color:transparent; background:transparent; padding-left:0;"><p style="margin:0; font-size:0.88rem;">\ud83d\udca1 ' +
+      'You just did market research on yourself \u2014 before anyone used that term. That\u2019s the whole idea behind ' +
+      'today\u2019s project.</p></div>' +
+      btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderScenario() {
+    var optsHtml = "";
+    COMP_CHECK.options.forEach(function(opt, i) {
+      var sel = state.compChoice === i ? " selected" : "";
+      optsHtml += '<div class="mcq-opt' + sel + '" data-idx="' + i + '">' +
+        '<input type="radio" name="cbee-comp" ' + (state.compChoice === i ? "checked" : "") + '>' +
+        '<span>' + esc(opt) + '</span></div>';
+    });
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("scroll", "Reveal", "Today, you become a cookie-business owner", STEP_TIME.scenario) +
+      '<div class="instructions"><p>Read the scenario below carefully \u2014 twice if you can. You\u2019ll use these ' +
+      'details for the rest of the activity.</p></div>' +
+      '<div class="idea-card"><p class="idea-body" style="margin:0; font-size:1rem;">' + esc(SCENARIO_TEXT) + '</p></div>' +
+      '<div class="field" style="margin-top:22px;"><label>' + esc(COMP_CHECK.question) + '</label>' + optsHtml + '</div>' +
+      btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderBrainstorm() {
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("think", "Design Your Business", "Build your cookie business idea", STEP_TIME.brainstorm) +
+      '<div class="instructions"><p>Using the scenario, invent your own cookie business. It can build on the ' +
+      'neighbor\u2019s recipe, or go a completely different direction \u2014 your call. Answer all four prompts in your ' +
+      'own words. Sentence starters are there if you get stuck, not required.</p></div>' +
+      '<div class="field"><label>1. Describe your cookie business. How is it similar to Crumbl, Insomnia, or a local ' +
+      'bakery \u2014 and what are 2\u20133 ways it stands out from them?</label>' +
+      '<textarea id="cbee-q1" rows="4" placeholder="Sentence starter: \u201cOur cookie business is different because ___.\u201d">' + esc(state.brainstormQ1) + '</textarea></div>' +
+      '<div class="field"><label>2. Describe the customer problem, need, or want your business addresses.</label>' +
+      '<textarea id="cbee-q2" rows="3" placeholder="Sentence starter: \u201cOur customer struggles with ___.\u201d">' + esc(state.brainstormQ2) + '</textarea></div>' +
+      '<div class="field"><label>3. Explain how your business \u2014 and you, specifically, as the owner \u2014 will solve ' +
+      'that problem, need, or want.</label>' +
+      '<textarea id="cbee-q3" rows="3" placeholder="What will you actually do differently as the owner?">' + esc(state.brainstormQ3) + '</textarea></div>' +
+      btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderSketch() {
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("brush", "Visualize", "Sketch or describe your product", STEP_TIME.sketch) +
+      '<div class="instructions"><p>Sketch your cookie, its packaging, or your storefront right on the canvas below ' +
+      '\u2014 highlight whatever detail makes it most compelling. Not confident drawing on a screen? Skip the canvas ' +
+      'and just describe it in detail in the text box instead. Either one satisfies this step.</p></div>' +
+      '<canvas id="cbee-canvas" width="520" height="320"></canvas>' +
+      '<div class="swatches">' +
+      '<div class="swatch active" style="background:#142c54" data-color="#142c54"></div>' +
+      '<div class="swatch" style="background:#c9a227" data-color="#c9a227"></div>' +
+      '<div class="swatch" style="background:#a15a5a" data-color="#a15a5a"></div>' +
+      '<div class="swatch" style="background:#5a9e78" data-color="#5a9e78"></div>' +
+      '<button class="btn-ghost btn-small" id="cbee-clear" type="button">Clear canvas</button>' +
+      '</div>' +
+      '<div class="field" style="margin-top:16px;"><label>Describe your product (required)</label>' +
+      '<textarea id="cbee-sketchdesc" rows="4" placeholder="What does it look like? What\u2019s the most compelling or valuable detail for a customer?">' + esc(state.sketchDescription) + '</textarea></div>' +
+      btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderGallery() {
+    var cards = "";
+    GALLERY_IDEAS.forEach(function(idea, i) {
+      cards += '<div class="idea-card">' +
+        '<div class="idea-title">' + esc(idea.title) + '</div>' +
+        '<div class="idea-body">' + esc(idea.body) + '</div>' +
+        '<div class="glow-grow">' +
+        '<div><div class="gg-label glow">\ud83d\udfe2 Glow</div><input type="text" class="cbee-glow" data-idx="' + i + '" placeholder="One thing that works well" value="' + escAttr(state.galleryGlow[i]) + '"></div>' +
+        '<div><div class="gg-label grow">\ud83d\udfe0 Grow</div><input type="text" class="cbee-grow" data-idx="' + i + '" placeholder="One thing to reconsider" value="' + escAttr(state.galleryGrow[i]) + '"></div>' +
+        '</div></div>';
+    });
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("walk", "Gallery Walk", "Review three other cookie business ideas", STEP_TIME.gallery) +
+      '<div class="instructions"><p>In class, you\u2019d walk the room reading everyone\u2019s ideas. Here, read the three ' +
+      'sample business concepts below and leave one <strong>glow</strong> (something that works) and one ' +
+      '<strong>grow</strong> (something you\u2019d reconsider or question) for each.</p></div>' +
+      cards + btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderReflection() {
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("scroll", "Discuss", "Reflect before we zoom out", STEP_TIME.reflection) +
+      '<div class="instructions"><p>Answer honestly \u2014 these connect straight to the question your whole project ' +
+      'will spend the next seven weeks answering.</p></div>' +
+      '<div class="field"><label>1. What was challenging about designing a product for a specific need? How do ' +
+      'businesses go about identifying these needs in the real world?</label>' +
+      '<textarea id="cbee-r1" rows="3">' + esc(state.reflectionQ1) + '</textarea></div>' +
+      '<div class="field"><label>2. What makes some products better than others at solving customer problems?</label>' +
+      '<textarea id="cbee-r2" rows="3">' + esc(state.reflectionQ2) + '</textarea></div>' +
+      '<div class="field"><label>3. Which of the three sample cookie shops from the gallery walk would you actually ' +
+      'want to see open \u2014 and why?</label>' +
+      '<textarea id="cbee-r3" rows="3">' + esc(state.reflectionQ3) + '</textarea></div>' +
+      '<div class="instructions"><p><strong>The big picture:</strong> Project Driving Question \u2014 <em>How does a ' +
+      'business identify a market opportunity and launch a product that meets customer needs and wants?</em> ' +
+      'Over the next seven weeks, you\u2019ll identify a real customer problem, need, or want, build a full business ' +
+      'idea around it, and pitch it for feedback.</p></div>' +
+      btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderVocab() {
+    var cards = "";
+    VOCAB_CARDS.forEach(function(v, i) {
+      cards += '<div class="vocab-card" data-idx="' + i + '">' +
+        '<div class="vocab-q">' + esc(v.prompt) + '</div>' +
+        '<div class="vocab-toggle">Tap to reveal the term \u2193</div>' +
+        '<div class="vocab-reveal" id="cbee-vocab-reveal-' + i + '">' +
+        '<div class="vocab-term">' + esc(v.term) + '</div>' +
+        '<p style="margin:0;">' + esc(v.def) + '</p></div></div>';
+    });
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("speech", "Vocabulary", "Business Word Wall", STEP_TIME.vocab) +
+      '<div class="instructions"><p>These terms already showed up in your work \u2014 you just didn\u2019t have the formal ' +
+      'name for them yet. Read each question, think about your own answer, then tap the card to see the term.</p></div>' +
+      cards + btnRow({showBack:true, showSave:true}) + '</div></div>';
+  }
+
+  function renderExit() {
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      header("ribbon", "Exit Ticket", "Wrap up today\u2019s work", STEP_TIME.exit) +
+      '<div class="instructions"><p>This is what you\u2019ll submit for today\u2019s activity. Be specific \u2014 \u201ccheaper\u201d ' +
+      'or \u201cbetter\u201d alone won\u2019t cut it.</p></div>' +
+      '<div class="field"><label>In your own words, name one thing your cookie business does differently from ' +
+      'Crumbl, Insomnia, or a local bakery \u2014 and explain why a customer would care.</label>' +
+      '<textarea id="cbee-exit" rows="4">' + esc(state.exitTicket) + '</textarea></div>' +
+      '<div class="homework-box"><p class="eyebrow" style="margin-bottom:8px;">Homework \u2014 due next class</p>' +
+      '<label>\u201cIf I were to start my own business, what would it be?\u201d Bring a one-sentence answer.</label>' +
+      '<textarea id="cbee-homework" rows="2">' + esc(state.homework) + '</textarea></div>' +
+      btnRow({showBack:true, showSave:true, nextLabel:"Finish \u2192"}) + '</div></div>';
+  }
+
+  function renderSummary() {
+    function block(label, text, empty) {
+      var cls = text ? "" : " empty";
+      return '<div class="summary-block"><div class="summary-label">' + label + '</div>' +
+        '<div class="summary-text' + cls + '">' + esc(text || empty) + '</div></div>';
+    }
+    var galleryText = "";
+    GALLERY_IDEAS.forEach(function(idea, i) {
+      galleryText += idea.title + " \u2014 Glow: " + (state.galleryGlow[i] || "(none)") + " | Grow: " + (state.galleryGrow[i] || "(none)") + "\n";
+    });
+    var sketchImg = state.sketchDataUrl ? '<img src="' + state.sketchDataUrl + '" style="max-width:100%; border-radius:8px; border:1px solid var(--navy-line); margin-top:8px;" crossorigin="anonymous">' : "";
+    return '<div class="wrap">' + progressBar() + '<div class="card">' +
+      '<div id="cbee-capture" style="padding:4px;">' +
+      header("folder", "Complete", "Your Entry Event Portfolio Entry", STEP_TIME.summary) +
+      '<div class="instructions"><p>Nice work \u2014 this is everything you\u2019ll carry into Project 1.</p></div>' +
+      block("Name / Period", (state.studentName || "") + (state.period ? " \u00b7 " + state.period : "")) +
+      block("Bell ringer \u2014 what makes you stop", state.bellStop, "(not answered)") +
+      block("Bell ringer \u2014 best cookie", state.bellBest, "(not answered)") +
+      block("Business idea \u2014 differentiation", state.brainstormQ1, "(not answered)") +
+      block("Business idea \u2014 customer need", state.brainstormQ2, "(not answered)") +
+      block("Business idea \u2014 how you solve it", state.brainstormQ3, "(not answered)") +
+      block("Product description", state.sketchDescription, "(not answered)") +
+      (sketchImg ? '<div class="summary-block"><div class="summary-label">Sketch</div>' + sketchImg + '</div>' : "") +
+      block("Gallery walk feedback", galleryText.trim(), "(not answered)") +
+      block("Reflection", "1) " + (state.reflectionQ1 || "\u2014") + "\n2) " + (state.reflectionQ2 || "\u2014") + "\n3) " + (state.reflectionQ3 || "\u2014")) +
+      block("Exit ticket", state.exitTicket, "(not answered)") +
+      block("Homework \u2014 my business idea", state.homework, "(not answered)") +
+      '</div>' +
+      '<div id="cbee-gdoc-status" class="instructions" style="display:none;"></div>' +
+      '<div class="btnrow"><button class="btn-ghost" id="cbee-back">\u2190 Back</button>' +
+      '<div style="display:flex; gap:10px; flex-wrap:wrap;">' +
+      '<button class="btn-ghost" id="cbee-download">Download as .txt</button>' +
+      '<button class="btn-primary" id="cbee-image">Download image of my submission</button></div></div>' +
+      '</div></div>';
+  }
+
+  var RENDERERS = {
+    start: renderStart, bellringer: renderBellRinger, scenario: renderScenario, brainstorm: renderBrainstorm,
+    sketch: renderSketch, gallery: renderGallery, reflection: renderReflection, vocab: renderVocab,
+    exit: renderExit, summary: renderSummary
+  };
+
+  function esc(s) {
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function escAttr(s) {
+    return esc(s).replace(/"/g,"&quot;");
+  }
+
+  // ---------- CANVAS ----------
+  var canvasCtx = null, drawing = false, activeColor = "#142c54", lastX = 0, lastY = 0;
+
+  function setupCanvas() {
+    var canvas = document.getElementById("cbee-canvas");
+    if (!canvas) return;
+    canvasCtx = canvas.getContext("2d");
+    canvasCtx.fillStyle = "#fdfaf2";
+    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    if (state.sketchDataUrl) {
+      var img = new Image();
+      img.onload = function() { canvasCtx.drawImage(img, 0, 0); };
+      img.src = state.sketchDataUrl;
+    }
+    canvasCtx.lineWidth = 3;
+    canvasCtx.lineCap = "round";
+
+    function pos(e) {
+      var rect = canvas.getBoundingClientRect();
+      var scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+      var cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      var cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+      return { x: cx * scaleX, y: cy * scaleY };
+    }
+    function start(e) { drawing = true; var p = pos(e); lastX = p.x; lastY = p.y; e.preventDefault(); }
+    function move(e) {
+      if (!drawing) return;
+      var p = pos(e);
+      canvasCtx.strokeStyle = activeColor;
+      canvasCtx.beginPath(); canvasCtx.moveTo(lastX, lastY); canvasCtx.lineTo(p.x, p.y); canvasCtx.stroke();
+      lastX = p.x; lastY = p.y;
+      e.preventDefault();
+    }
+    function end() {
+      if (!drawing) return;
+      drawing = false;
+      state.sketchDataUrl = canvas.toDataURL("image/png");
+      queueSave();
+    }
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", end);
+    canvas.addEventListener("touchstart", start, { passive:false });
+    canvas.addEventListener("touchmove", move, { passive:false });
+    canvas.addEventListener("touchend", end);
+
+    document.querySelectorAll("#cbee-root .swatch").forEach(function(sw) {
+      sw.addEventListener("click", function() {
+        document.querySelectorAll("#cbee-root .swatch").forEach(function(s){ s.classList.remove("active"); });
+        sw.classList.add("active");
+        activeColor = sw.getAttribute("data-color");
+      });
+    });
+    var clearBtn = document.getElementById("cbee-clear");
+    if (clearBtn) clearBtn.addEventListener("click", function() {
+      canvasCtx.fillStyle = "#fdfaf2";
+      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+      state.sketchDataUrl = "";
+      queueSave();
+    });
+  }
+
+  // ---------- WIRE-UP PER STEP ----------
+  function wireStep(name) {
+    if (name === "start") {
+      var nameInput = document.getElementById("cbee-name");
+      var periodInput = document.getElementById("cbee-period");
+      var partnerInput = document.getElementById("cbee-partner");
+      var nextBtn = document.getElementById("cbee-next");
+      var resumeSlot = document.getElementById("cbee-resume-slot");
+
+      function checkResume() {
+        var key = STORAGE_PREFIX + slug(nameInput.value);
+        if (!nameInput.value.trim()) { resumeSlot.innerHTML = ""; nextBtn.disabled = true; return; }
+        nextBtn.disabled = false;
+        window.storage.get(key, false).then(function(res) {
+          if (res && res.value) {
+            resumeSlot.innerHTML = '<div class="resume-banner"><span>We found saved answers for <strong>' +
+              esc(nameInput.value) + '</strong>. Resume where you left off?</span>' +
+              '<button class="btn-primary btn-small" id="cbee-resume-yes">Resume</button></div>';
+            document.getElementById("cbee-resume-yes").addEventListener("click", function() {
+              try {
+                var loaded = JSON.parse(res.value);
+                Object.assign(state, loaded);
+                render();
+              } catch (e) { console.error("resume parse failed", e); }
+            });
+          } else {
+            resumeSlot.innerHTML = "";
+          }
+        }).catch(function() { resumeSlot.innerHTML = ""; });
+      }
+      nameInput.addEventListener("input", function() { state.studentName = nameInput.value; checkResume(); });
+      periodInput.addEventListener("input", function() { state.period = periodInput.value; });
+      partnerInput.addEventListener("input", function() { state.partnerName = partnerInput.value; });
+      checkResume();
+      nextBtn.addEventListener("click", function() {
+        if (!state.studentName.trim()) return;
+        storageKey = STORAGE_PREFIX + slug(state.studentName);
+        queueSave();
+        goNext();
+      });
+      return;
+    }
+
+    if (name === "bellringer") {
+      bindText("cbee-bellstop", "bellStop");
+      bindText("cbee-bellbest", "bellBest");
+    }
+    if (name === "scenario") {
+      document.querySelectorAll("#cbee-root .mcq-opt").forEach(function(opt) {
+        opt.addEventListener("click", function() {
+          state.compChoice = parseInt(opt.getAttribute("data-idx"), 10);
+          document.querySelectorAll("#cbee-root .mcq-opt").forEach(function(o){ o.classList.remove("selected"); o.querySelector("input").checked = false; });
+          opt.classList.add("selected");
+          opt.querySelector("input").checked = true;
+          queueSave();
+        });
+      });
+    }
+    if (name === "brainstorm") {
+      bindText("cbee-q1", "brainstormQ1"); bindText("cbee-q2", "brainstormQ2"); bindText("cbee-q3", "brainstormQ3");
+    }
+    if (name === "sketch") {
+      setupCanvas();
+      bindText("cbee-sketchdesc", "sketchDescription");
+    }
+    if (name === "gallery") {
+      document.querySelectorAll("#cbee-root .cbee-glow").forEach(function(inp) {
+        inp.addEventListener("input", function() { state.galleryGlow[parseInt(inp.getAttribute("data-idx"),10)] = inp.value; queueSave(); });
+      });
+      document.querySelectorAll("#cbee-root .cbee-grow").forEach(function(inp) {
+        inp.addEventListener("input", function() { state.galleryGrow[parseInt(inp.getAttribute("data-idx"),10)] = inp.value; queueSave(); });
+      });
+    }
+    if (name === "reflection") {
+      bindText("cbee-r1", "reflectionQ1"); bindText("cbee-r2", "reflectionQ2"); bindText("cbee-r3", "reflectionQ3");
+    }
+    if (name === "vocab") {
+      document.querySelectorAll("#cbee-root .vocab-card").forEach(function(card) {
+        card.addEventListener("click", function() {
+          var idx = card.getAttribute("data-idx");
+          document.getElementById("cbee-vocab-reveal-" + idx).classList.toggle("open");
+        });
+      });
+    }
+    if (name === "exit") {
+      bindText("cbee-exit", "exitTicket");
+      bindText("cbee-homework", "homework");
+    }
+    if (name === "summary") {
+      var dl = document.getElementById("cbee-download");
+      if (dl) dl.addEventListener("click", downloadSummary);
+      var imgBtn = document.getElementById("cbee-image");
+      if (imgBtn) imgBtn.addEventListener("click", downloadImage);
+    }
+
+    var backBtn = document.getElementById("cbee-back");
+    if (backBtn) backBtn.addEventListener("click", goBack);
+    var nextBtn2 = document.getElementById("cbee-next");
+    if (nextBtn2 && name !== "start") nextBtn2.addEventListener("click", goNext);
+  }
+
+  function bindText(id, key) {
+    var elx = document.getElementById(id);
+    if (!elx) return;
+    elx.addEventListener("input", function() { state[key] = elx.value; queueSave(); });
+  }
+
+  function buildSummaryText() {
+    var lines = [];
+    lines.push("COOKIE BUSINESS ENTRY EVENT \u2014 " + (state.studentName || "Student") + (state.period ? " (" + state.period + ")" : ""));
+    lines.push("");
+    lines.push("Bell ringer \u2014 what makes you stop: " + (state.bellStop || ""));
+    lines.push("Bell ringer \u2014 best cookie: " + (state.bellBest || ""));
+    lines.push("");
+    lines.push("Business idea \u2014 differentiation: " + (state.brainstormQ1 || ""));
+    lines.push("Business idea \u2014 customer need: " + (state.brainstormQ2 || ""));
+    lines.push("Business idea \u2014 how you solve it: " + (state.brainstormQ3 || ""));
+    lines.push("Product description: " + (state.sketchDescription || ""));
+    lines.push("");
+    GALLERY_IDEAS.forEach(function(idea, i) {
+      lines.push(idea.title + " \u2014 Glow: " + (state.galleryGlow[i] || "") + " | Grow: " + (state.galleryGrow[i] || ""));
+    });
+    lines.push("");
+    lines.push("Reflection 1: " + (state.reflectionQ1 || ""));
+    lines.push("Reflection 2: " + (state.reflectionQ2 || ""));
+    lines.push("Reflection 3: " + (state.reflectionQ3 || ""));
+    lines.push("");
+    lines.push("Exit ticket: " + (state.exitTicket || ""));
+    lines.push("Homework \u2014 my business idea: " + (state.homework || ""));
+    return lines.join("\n");
+  }
+
+  function downloadSummary() {
+    var blob = new Blob([buildSummaryText()], { type: "text/plain" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = slug(state.studentName || "student") + "-cookie-entry-event.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadImage() {
+    var statusEl = document.getElementById("cbee-gdoc-status");
+    var target = document.getElementById("cbee-capture");
+    var btn = document.getElementById("cbee-image");
+    if (!window.html2canvas || !target) {
+      if (statusEl) { statusEl.style.display = "block"; statusEl.innerHTML = "Image export didn\u2019t load \u2014 check your internet connection and try again, or use \u201cDownload as .txt\u201d instead."; }
+      return;
+    }
+    if (btn) { btn.disabled = true; btn.textContent = "Generating image\u2026"; }
+    if (statusEl) { statusEl.style.display = "block"; statusEl.innerHTML = "Rendering your full submission as an image \u2014 one moment\u2026"; }
+
+    window.html2canvas(target, { backgroundColor: "#0e2143", scale: 2, useCORS: true }).then(function(canvas) {
+      var link = document.createElement("a");
+      link.download = slug(state.studentName || "student") + "-cookie-entry-event.png";
+      link.href = canvas.toDataURL("image/png");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      if (statusEl) statusEl.innerHTML = "\u2705 Image downloaded. Upload that PNG anywhere you\u2019d submit a photo or file \u2014 Google Drive, Classroom, or your LMS.";
+      if (btn) { btn.disabled = false; btn.textContent = "Download image of my submission"; }
+    }).catch(function(e) {
+      console.error("image export failed", e);
+      if (statusEl) statusEl.innerHTML = "Something went wrong generating the image. Try again, or use \u201cDownload as .txt\u201d instead.";
+      if (btn) { btn.disabled = false; btn.textContent = "Download image of my submission"; }
+    });
+  }
+
+  function goNext() { if (current < STEPS.length - 1) { current++; render(); window.scrollTo(0,0); } }
+  function goBack() { if (current > 0) { current--; render(); window.scrollTo(0,0); } }
+
+  function render() {
+    var root = document.getElementById("cbee-root");
+    var name = STEPS[current];
+    root.innerHTML = RENDERERS[name]();
+    wireStep(name);
+  }
+
+  render();
+})();
+</script>
